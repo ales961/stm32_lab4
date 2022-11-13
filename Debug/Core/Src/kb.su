@@ -1,0 +1,6 @@
+../Core/Src/kb.c:13:19:Set_Keyboard	16	static
+../Core/Src/kb.c:34:9:Check_Row	24	static
+../Core/Src/kb.c:73:6:kbKeyExecute	24	static
+../Core/Src/kb.c:85:6:keyPressHandle	24	static
+../Core/Src/kb.c:102:6:keyReleaseHandle	16	static
+../Core/Src/kb.c:109:6:kbChangeMode	4	static
