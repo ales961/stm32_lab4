@@ -21,5 +21,6 @@ char* downDuration();
 void setPlay(uint8_t noteNumber);
 char* playNote(uint8_t noteNumber);
 char* playAll();
+void disableIsPlaying();
 
 #endif /* BUZZER_H_ */

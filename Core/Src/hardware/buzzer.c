@@ -4,7 +4,9 @@
 #include "hardware/buzzer.h"
 #include "tim.h"
 
-uint8_t octave = 0;
+uint8_t isPlaying = 0;
+
+uint8_t octave = 4;
 char* octaveNames[9] = {"sub-contra octave", "contra octave", "great octave", "small octave",
 		"one-line octave", "two-line octave", "three-line octave", "four-line octave", "five-line octave"};
 
@@ -28,15 +30,17 @@ void setFrequency(uint16_t freq) {
 }
 
 void setPlay(uint8_t noteNumber) {
-	setFrequency((uint8_t) getNoteFrequency(noteNumber));
+	setFrequency((uint16_t) getNoteFrequency(noteNumber));
 	setVolume(10);
 }
 
 char buf[128];
 char* playNote(uint8_t noteNumber) {
+	if (isPlaying) return "buzzer not ready\n";
+	isPlaying = 1;
 	setPlay(noteNumber);
 	TIM6_START();
-	sprintf(buf, "note %s, %s, duration %dms", noteNames[noteNumber], octaveNames[octave], duration);
+	sprintf(buf, "note %s, %s, duration %dms\n", noteNames[noteNumber], octaveNames[octave], duration);
 	return buf;
 }
 
@@ -63,32 +67,39 @@ char* playG() {
 }
 
 char* playAll() {
+	if (isPlaying) return "buzzer not ready\n";
+	isPlaying = 1;
 	setPlayAllFlag();
 	setPlay(0);
 	TIM6_START();
-	sprintf(buf, "notes A,B,C,D,E,F,G, %s, duration %dms", octaveNames[octave], duration);
+	sprintf(buf, "notes A,B,C,D,E,F,G, %s, duration %dms\n", octaveNames[octave], duration);
 	return buf;
 }
 
 char* upOctave() {
+	if (isPlaying) return "buzzer not ready\n";
 	if (octave < 8) {
 		octave++;
-		return strcat(octaveNames[octave], "\n");
+		sprintf(buf, "%s\n", octaveNames[octave]);
+		return buf;
 	}
 	return "Octave is maximum\n";
 }
 
 char* downOctave() {
+	if (isPlaying) return "buzzer not ready\n";
 	if (octave > 0) {
 		octave--;
-		return strcat(octaveNames[octave], "\n");
+		sprintf(buf, "%s\n", octaveNames[octave]);
+		return buf;
 	}
 	return "Octave is minimum\n";
 }
 
 char* upDuration() {
+	if (isPlaying) return "buzzer not ready\n";
 	if (duration < 5000) {
-		TIM6->CNT += 100;
+		TIM6->ARR += 100;
 		duration += 100;
 		sprintf(buf, "%dms\n", duration);
 		return buf;
@@ -97,11 +108,16 @@ char* upDuration() {
 }
 
 char* downDuration() {
+	if (isPlaying) return "buzzer not ready\n";
 	if (duration > 100) {
-		TIM6->CNT -= 100;
+		TIM6->ARR -= 100;
 		duration -= 100;
 		sprintf(buf, "%dms\n", duration);
 		return buf;
 	}
 	return "Duration is minimum\n";
+}
+
+void disableIsPlaying() {
+	isPlaying = 0;
 }

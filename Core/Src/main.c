@@ -117,7 +117,7 @@ int main(void)
   /* USER CODE BEGIN 2 */
   uartInit();
   HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
-
+  HAL_TIM_Base_Start_IT(&htim6);
   buttonInit(BTN_N_GPIO_Port, BTN_N_Pin);
   buttonSetOnClick(&kbChangeMode);
 
@@ -190,19 +190,23 @@ static void kbUpdateState() {
 	uint8_t Key;
 	for ( int i = 0; i < 4; i++ ) {
 		Key = Check_Row( Row[i] );
-		if ( Key == 0x01 ) {
+		Key = Check_Row( Row[i] );
+		Key = Check_Row( Row[i] );
+		Key = Check_Row( Row[i] );
+		Key = Check_Row( Row[i] );
+		if ( Key == 3 ) {
 			keyPressHandle(3*i+3);
 		} else {
 			keyReleaseHandle(3*i+3);
 		}
 
-		if ( Key == 0x02 ) {
+		if ( Key == 2 ) {
 			keyPressHandle(3*i+2);
 		} else {
 			keyReleaseHandle(3*i+2);
 		}
 
-		if ( Key == 0x04 ) {
+		if ( Key == 1 ) {
 			keyPressHandle(3*i+1);
 		} else {
 			keyReleaseHandle(3*i+1);

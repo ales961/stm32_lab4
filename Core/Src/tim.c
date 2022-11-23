@@ -243,6 +243,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 		if (!playAllFlag) {
 			TIM6_STOP();
 			TIM1->CCR1 = 0;
+			disableIsPlaying();
 		} else {
 			note++;
 			if (note >= 6) {
@@ -250,6 +251,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 				TIM6_STOP();
 				TIM1->CCR1 = 0;
 				resetPlayAllFlag();
+				disableIsPlaying();
 			} else {
 				setPlay(note);
 			}
